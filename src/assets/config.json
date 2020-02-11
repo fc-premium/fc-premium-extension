@@ -1,0 +1,52 @@
+{
+	"username": {
+		"title": "Git Username",
+		"description": "Color used for your profile",
+		"type": "string",
+		"default": "",
+		"value": ""
+	},
+
+	"email": {
+		"title": "Git Email",
+		"type": "email",
+		"default": ""
+	},
+
+	"password": {
+		"title": "Git Password",
+		"description": "A strong password",
+		"type": "password",
+		"default": ""
+	},
+
+	"connection-mode": {
+		"title": "Connection mode",
+		"description": "Protocol used to connect",
+		"type": "select",
+		"items": [
+			"http",
+			"https",
+			"ftp",
+			"sftp",
+			"ssh"
+		],
+		"default": 4,
+		"value": 4
+	},
+
+	"favourite-color": {
+		"title": "Favourite color",
+		"description": "Color used for your profile",
+		"type": "color",
+		"default": "#166fbf",
+		"value": "#166fbf"
+	},
+
+	"auto-update": {
+		"title": "Auto Update",
+		"description": "Automaticaly update the modules",
+		"type": "boolean",
+		"default": false
+	}
+}

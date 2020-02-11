@@ -1,0 +1,41 @@
+{
+        "name": "fc-premium",
+        "homepage_url": "http://localhost:8080/",
+        "description": "Fc premium",
+        "default_locale": "en",
+
+        "permissions": [
+                "activeTab",
+		"declarativeContent", "storage",
+                "<all_urls>",
+                "*://*/*"
+        ],
+
+        "icons": {
+                "48": "icons/48.png",
+                "128": "icons/128.png"
+        },
+
+        "background": {
+                "scripts": [
+                        "js/background.js"
+                ],
+                "persistent": false
+        },
+
+	"content_scripts": [{
+                "matches": ["https://*.forocoches.com/*"],
+                "js": [
+                        "js/content-script.js"
+                ]
+        }],
+
+        "browser_action": {
+                "default_title": "FC Premium",
+                "default_icon": {
+                        "32": "icons/32.png"
+                }
+        },
+
+	"manifest_version": 2
+}
