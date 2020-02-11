@@ -24,4 +24,4 @@ yarn-error.log*
 *.pem
 *.pub
 *.zip
-/artifacts
+artifacts
