@@ -22,10 +22,80 @@ import {
 	Vue
 } from 'vue-property-decorator';
 
+import store from './store'
+
 import LeftPane from './components/LeftPane.vue';
 import RightPane from './components/RightPane.vue';
 
 import Module from './module';
+
+
+import {
+	Core
+} from 'fc-premium-core'
+
+import {
+	StorageEntries
+} from 'fc-premium-core/src/definitions'
+
+Core.controller.setControllerMethods({
+	getter: (keys: string | string[]): any => {
+		return JSON.parse( < string > localStorage.getItem( < string > keys));
+	},
+	setter: (key: string, value: any): void => {
+		return localStorage.setItem(key, JSON.stringify(value));
+	},
+	deleter: (key: string): void => {
+		localStorage.removeItem(key);
+	},
+	lister: (): string[] => {
+		let list: string[] = [];
+
+		for (let i = 0; i < localStorage.length; i++) {
+			const key: string = < string > localStorage.key(i);
+
+			if (key.startsWith(StorageEntries.root))
+				list.push(key)
+		}
+
+		return list;
+	},
+})
+
+
+function toggleStyleTags() {
+
+	document.body.style.display = !store.state.appIsVisible ?
+		'block' : 'none';
+
+	document.getElementById('app') !.style.display = store.state.appIsVisible ?
+		'block' : 'none';
+
+	// Toggle site css
+	Array.from(document.querySelectorAll < HTMLStyleElement > ('style[tag="page-style"], style[tag="fc-premium-module"]')).forEach((element) => {
+		const stylesheet = element.sheet;
+		stylesheet!.disabled = store.state.appIsVisible;
+
+		element.setAttribute('___disabled', stylesheet!.disabled.toString());
+	})
+
+	// Toggle vue css
+	// Array.from(document.querySelectorAll < HTMLStyleElement > ('style:not([tag])')).forEach((element) => {
+	// 	const stylesheet = element.sheet;
+	// 	stylesheet!.disabled = !this!.$store.state.appIsVisible;
+	//
+	// 	element.setAttribute('___disabled', stylesheet!.disabled.toString());
+	// })
+
+	// Toggle extension css
+	Array.from(document.querySelectorAll < HTMLLinkElement > ('link[tag="fc-premium-link"]')).forEach((element: HTMLLinkElement) => {
+		// const stylesheet = element.sheet;
+		element!.disabled = !store.state.appIsVisible;
+
+		element.setAttribute('___disabled', element!.disabled.toString());
+	})
+
+}
 
 @Component({
 	components: {
@@ -37,26 +107,11 @@ import Module from './module';
 export default class App extends Vue {
 	@Watch("$store.state.appIsVisible")
 	appVisibilityChanged() {
+		toggleStyleTags();
+	}
 
-		document.body.style.display = !this.$store.state.appIsVisible ?
-			'block' : 'none';
-
-		document.getElementById('app') !.style.display = this.$store.state.appIsVisible ?
-			'block' : 'none';
-
-		// Toggle site css
-		Array.from(document.getElementsByTagName('style')).slice(0, 12).forEach((element: HTMLStyleElement) => {
-			const stylesheet = element.sheet;
-
-			stylesheet!.disabled = this!.$store.state.appIsVisible;
-		})
-
-		// Toggle extension css
-		Array.from(document.querySelectorAll < HTMLLinkElement > ('[tag="fc-premium-link"]')).slice(0, 12).forEach((element: HTMLLinkElement) => {
-			element.disabled = !this!.$store.state.appIsVisible;
-		})
-
-
+	mounted() {
+		toggleStyleTags();
 	}
 }
 </script>
@@ -66,27 +121,27 @@ html {
 	overflow-y: auto !important;
 }
 
-#app ::-webkit-scrollbar {
+::-webkit-scrollbar {
 	width: 10px;
 	height: 10px;
 }
 
-#app ::-webkit-scrollbar-button {
+::-webkit-scrollbar-button {
 	width: 0px;
 	height: 0px;
 }
 
-#app ::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
 	background: var(--v-primary-base);
 	border: 0px;
 	border-radius: 0px;
 }
 
-#app ::-webkit-scrollbar-corner {
+::-webkit-scrollbar-corner {
 	background: transparent;
 }
 
-#app {
+	{
 	position: fixed;
 	display: flex;
 	top: 0;

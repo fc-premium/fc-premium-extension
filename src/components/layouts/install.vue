@@ -40,13 +40,13 @@
                 Featured
         </div> -->
 
-	<v-row v-for="(repo, i) in requestedRepos"
+	<v-row v-for="(repo, i) in filterRepos(requestedRepos)"
 		:key="i">
 		<v-col>
 			<v-lazy :options="{ threshold: 1 }">
 				<v-card hover
 					ripple
-					@click="openLink('https://github.com/' + repo.full_name)">
+					@click="openRepo(repo.name)">
 					<v-card-title>{{repo.name}}</v-card-title>
 					<v-card-text>{{repo.description}}</v-card-text>
 					<v-card-subtitle>
@@ -56,6 +56,27 @@
 							<v-img :src="repo.owner.avatar_url" />
 						</v-avatar>
 						{{repo.owner.login}}
+
+						<div style="float: right;">
+
+							<v-btn v-if="isInstalled(repo.name)"
+								text
+								small
+								class="no-text-transform caption .font-weight-light">
+								<v-icon left
+									color="primary">mdi-settings</v-icon>
+								<span>Settings</span>
+							</v-btn>
+
+							<v-btn text
+								small
+								@click.stop="isInstalled(repo.name) ? uninstall(repo.name):  install(repo)"
+								class="no-text-transform caption .font-weight-light">
+								<v-icon left
+									color="primary">{{isInstalled(repo.name) ? 'mdi-trash-can-outline' : 'mdi-download'}}</v-icon>
+								<span>Install</span>
+							</v-btn>
+						</div>
 					</v-card-subtitle>
 				</v-card>
 			</v-lazy>
@@ -73,6 +94,10 @@ import {
 
 import Module from '../../module'
 
+
+import {
+	Core
+} from 'fc-premium-core'
 
 const Octokit = require("@octokit/rest");
 const octokit = new Octokit();
@@ -121,7 +146,7 @@ export default class Install extends Vue {
 		const signal = this.abortController.signal;
 
 		const request = this.currentPromise = octokit.search.repos({
-			q: 'topic:atom ' + this.filterText,
+			q: 'topic:fc-premium-module ' + this.filterText,
 
 			request: {
 				signal: signal
@@ -149,30 +174,60 @@ export default class Install extends Vue {
 			this.currentPromise = null;
 
 		this.requestedRepos = response.data.items;
+
+		console.log(this.requestedRepos)
 	}
 
-	public openLink(url: string) {
-		window.open(url);
+	public openRepo(name: string) {
+		this.$router.push({
+			path: `/module/${name}`,
+		});
+	}
+
+	filterRepos(__repos: any) {
+
+		let repos: any = __repos.slice();
+
+		console.log('called filterRepos')
+		const keywords = this.filterText.toLowerCase()
+			.split(' ').filter(k => k.length > 0);
+
+		if (keywords.length !== 0) {
+			repos = repos.filter((repo: any) =>
+				keywords.every(keyword => repo.name.includes(keyword))
+			)
+		}
+
+		return repos.sort((repo_a: any, repo_b: any) => {
+			console.log(repo_a.name, repo_b.name, repo_a.name.localeCompare(repo_b.name))
+
+			return repo_a.name.localeCompare(repo_b.name)
+		});
+	}
+
+	install(repo: any) {
+		console.log('Called install')
+		Core.modules.installModuleFromGithub(repo, true).then(x =>
+			this.$forceUpdate()
+		)
+	}
+
+	uninstall(repo_name: any) {
+		console.log('Called uninstall')
+
+		Core.modules.uninstall(repo_name);
+		this.$forceUpdate();
+	}
+
+	isInstalled(repo_name: any) {
+		console.log('Called isinstalled')
+
+		// console.log(Core.modules.listInstalledModules(), repo.name, Core.modules.listInstalledModules().includes(repo.name))
+		return Core.modules.listInstalledModules().includes(repo_name)
 	}
 
 	created() {
 		this.requestRepos();
 	}
-
-	// filterPackages(modules: Module[]) {
-	// 	const keywords = this.filterText.toLowerCase()
-	// 		.split(' ').filter(k => k.length > 0);
-	//
-	// 	if (keywords.length === 0)
-	// 		return modules;
-	// 	// else
-	// 	// 	this.moduleNameList).forEach((name) =>
-	// 	// 		this.moduleNameList[name] = matchKeywords(keywords, name)
-	// 	// 	);
-	//
-	// 	return this.$store.state.modules.filter((module: Module) =>
-	// 		keywords.every(keyword => module.name.includes(keyword))
-	// 	);
-	// }
 }
 </script>

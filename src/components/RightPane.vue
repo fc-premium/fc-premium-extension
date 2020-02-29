@@ -4,10 +4,10 @@
                 <v-container>
                         <v-row>
                                 <v-col cols="10">
-                                        <keep-alive>
-                                                <!-- <component :is="currentComponent" /> -->
-                                                <router-view></router-view>
-                                        </keep-alive>
+                                        <!-- <keep-alive> -->
+                                        <!-- <component :is="currentComponent" /> -->
+                                        <router-view></router-view>
+                                        <!-- </keep-alive> -->
                                 </v-col>
                         </v-row>
                 </v-container>

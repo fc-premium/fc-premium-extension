@@ -5,29 +5,30 @@
 			<v-breadcrumbs class="no-selection pa-0 mb-6"
 				:items="breadcrumbs_items"></v-breadcrumbs>
 
-			<v-card :class="(!module.enabled ? 'disabled-card'  : '') + ' no-selection'">
+			<v-card :class="(!module.enabled ? 'disabled-card ' : '' ) + ' no-selection'">
 				<v-card-title>{{module.name}}</v-card-title>
-				<v-card-subtitle>v {{module.version}}</v-card-subtitle>
-				<v-card-text>{{module.description}}</v-card-text>
+				<v-card-subtitle>v {{module.info.version}}</v-card-subtitle>
+				<v-card-text>{{module.info.description}}</v-card-text>
 				<v-card-subtitle>
-					{{module.author}}
+					{{module.info.author}}
 					<div style="float: right;">
-						<v-tooltip top>
-							<template v-slot:activator="{ on }">
-								<v-btn icon
-									small
-									:disabled="!module.isDeprecated()"
-									class="no-text-transform caption .font-weight-light"
-									v-on="on">
-									<v-icon small
-										color="alert">mdi-alert</v-icon>
-								</v-btn>
-							</template>
-							<span>Deprecated (??)</span>
-						</v-tooltip>
+						<!-- <v-tooltip top>
+                                                        <template v-slot:activator="{ on }">
+                                                                <v-btn icon
+                                                                        small
+                                                                        :disabled="!module.isDeprecated()"
+                                                                        class="no-text-transform caption .font-weight-light"
+                                                                        v-on="on">
+                                                                        <v-icon small
+                                                                                color="alert">mdi-alert</v-icon>
+                                                                </v-btn>
+                                                        </template>
+                                                        <span>Deprecated (??)</span>
+                                                </v-tooltip> -->
 
 						<v-btn text
 							small
+							@click.stop="uninstall(module)"
 							class="no-text-transform caption .font-weight-light">
 							<v-icon left
 								color="primary">mdi-trash-can-outline</v-icon>
@@ -36,7 +37,7 @@
 
 						<v-btn text
 							small
-							@click="module.enabled = !module.enabled"
+							@click="module.enabled = !module.enabled; $forceUpdate()"
 							class="no-text-transform caption .font-weight-light">
 							<v-icon left
 								color="primary">mdi-{{module.enabled ? 'pause' : 'play' }}</v-icon>
@@ -51,7 +52,7 @@
 
 
 	</v-row>
-	<div v-if="module.settings !== null">
+	<div v-if="module.config.keys() !== 0">
 		<v-row>
 			<v-col>
 				<div class="display-2 my-5 font-weight-thin no-selection">
@@ -62,7 +63,7 @@
 			</v-col>
 		</v-row>
 
-		<v-row v-for="(option, i) in module.settings"
+		<v-row v-for="(option, i) in module_settings"
 			:key="i">
 			<v-col class="headline no-selection"
 				cols="8">
@@ -89,7 +90,8 @@
 						persistent-hint>
 					</v-input>
 					<v-text-field type="number"
-						dense></v-text-field>
+						dense
+						:value="option.value"></v-text-field>
 				</div>
 
 				<div v-else-if="option.type == 'boolean'">
@@ -114,7 +116,9 @@ import {
 	Vue
 } from 'vue-property-decorator'
 
-import Module from '../../module'
+import {
+	Core
+} from 'fc-premium-core'
 
 import StringInput from '../templates/inputs/string-input.vue';
 import PasswordInput from '../templates/inputs/password-input.vue';
@@ -133,10 +137,21 @@ import SelectInput from '../templates/inputs/select-input.vue';
 })
 export default class ModuleDisplay extends Vue {
 
-	get module(): Module {
-		return this.$store.state.modules.find((module: Module) =>
-			module.name == this.$route.params.moduleName
-		);
+	private module!: Core.Module;
+
+	data() {
+		return {
+			module: Core.modules.get(this.$route.params.moduleName)
+		}
+	}
+
+	get module_settings() {
+		const module = this.module;
+
+		return module.config.keys().map(key => {
+			console.log(module.config.getMeta(key))
+			return module.config.getMeta(key)
+		});
 	}
 
 	get breadcrumbs_items() {
@@ -146,6 +161,16 @@ export default class ModuleDisplay extends Vue {
 		}, {
 			text: this.module.name
 		}]
+	}
+
+	uninstall(module: Core.Module) {
+		Core.modules.uninstall(module.name);
+
+		// this.$router.push({
+		// 	path: '/'
+		// });
+
+		this.$forceUpdate();
 	}
 
 
