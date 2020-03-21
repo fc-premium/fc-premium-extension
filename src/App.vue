@@ -1,5 +1,5 @@
 <template>
-<v-app :style="$store.state.appIsVisible ? '' : 'display: none'">
+<v-app :style="$store.state.appIsVisible && $store.state.loaded ? '' : 'display: none'">
 	<v-app-bar app
 		clipped-left>
 		<v-toolbar-title>FC Premium</v-toolbar-title>
@@ -22,96 +22,66 @@ import {
 	Vue
 } from 'vue-property-decorator';
 
-import store from './store'
-
 import LeftPane from './components/LeftPane.vue';
 import RightPane from './components/RightPane.vue';
-
-import Module from './module';
-
-
-import {
-	Core
-} from 'fc-premium-core'
-
-import {
-	StorageEntries
-} from 'fc-premium-core/src/definitions'
-
-Core.controller.setControllerMethods({
-	getter: (keys: string | string[]): any => {
-		return JSON.parse( < string > localStorage.getItem( < string > keys));
-	},
-	setter: (key: string, value: any): void => {
-		return localStorage.setItem(key, JSON.stringify(value));
-	},
-	deleter: (key: string): void => {
-		localStorage.removeItem(key);
-	},
-	lister: (): string[] => {
-		let list: string[] = [];
-
-		for (let i = 0; i < localStorage.length; i++) {
-			const key: string = < string > localStorage.key(i);
-
-			if (key.startsWith(StorageEntries.root))
-				list.push(key)
-		}
-
-		return list;
-	},
-})
-
-
-function toggleStyleTags() {
-
-	document.body.style.display = !store.state.appIsVisible ?
-		'block' : 'none';
-
-	document.getElementById('app') !.style.display = store.state.appIsVisible ?
-		'block' : 'none';
-
-	// Toggle site css
-	Array.from(document.querySelectorAll < HTMLStyleElement > ('style[tag="page-style"], style[tag="fc-premium-module"]')).forEach((element) => {
-		const stylesheet = element.sheet;
-		stylesheet!.disabled = store.state.appIsVisible;
-
-		element.setAttribute('___disabled', stylesheet!.disabled.toString());
-	})
-
-	// Toggle vue css
-	// Array.from(document.querySelectorAll < HTMLStyleElement > ('style:not([tag])')).forEach((element) => {
-	// 	const stylesheet = element.sheet;
-	// 	stylesheet!.disabled = !this!.$store.state.appIsVisible;
-	//
-	// 	element.setAttribute('___disabled', stylesheet!.disabled.toString());
-	// })
-
-	// Toggle extension css
-	Array.from(document.querySelectorAll < HTMLLinkElement > ('link[tag="fc-premium-link"]')).forEach((element: HTMLLinkElement) => {
-		// const stylesheet = element.sheet;
-		element!.disabled = !store.state.appIsVisible;
-
-		element.setAttribute('___disabled', element!.disabled.toString());
-	})
-
-}
 
 @Component({
 	components: {
 		LeftPane,
 		RightPane,
-	},
-	props: ['modules']
+	}
 })
 export default class App extends Vue {
+
+	private lastBodyScrollPosition: [number, number] = [0, 0];
+
+	private toogleVisibility() {
+		if (this.$store.state.appIsVisible === true) {
+
+			// Save scroll position
+			this.lastBodyScrollPosition[0] = document.documentElement.scrollLeft;
+			this.lastBodyScrollPosition[1] = document.documentElement.scrollTop;
+
+			console.log('Saved', this.lastBodyScrollPosition)
+
+			document.body.style.display = 'none';
+			( < HTMLElement > this.$el).style.display = 'block';
+
+		} else {
+
+			document.body.style.display = 'block';
+			( < HTMLElement > this.$el).style.display = 'none';
+
+			// Delayed apply saved scroll position
+			setTimeout(() => {
+				document.documentElement.scrollLeft = this.lastBodyScrollPosition[0];
+				document.documentElement.scrollTop = this.lastBodyScrollPosition[1];
+			})
+		}
+	}
+
+	private toggleStyleTags() {
+
+		Array.from(document.querySelectorAll < HTMLStyleElement > ('style[tag="page-style"], style[tag="fc-premium-module"]')).forEach((element) => {
+			const stylesheet = element.sheet;
+			stylesheet!.disabled = this.$store.state.appIsVisible;
+		});
+
+		// Toggle extension css
+		Array.from(document.querySelectorAll < HTMLLinkElement > ('link[tag="fc-premium-link"]')).forEach((element: HTMLLinkElement) => {
+			// const stylesheet = element.sheet;
+			element!.disabled = !this.$store.state.appIsVisible;
+		});
+	}
+
 	@Watch("$store.state.appIsVisible")
 	appVisibilityChanged() {
-		toggleStyleTags();
+		this.toggleStyleTags();
+		this.toogleVisibility();
 	}
 
 	mounted() {
-		toggleStyleTags();
+		this.toggleStyleTags();
 	}
 }
 </script>
