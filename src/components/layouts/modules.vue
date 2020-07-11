@@ -66,7 +66,6 @@
 							<span>Uninstall</span>
 						</v-btn>
 
-
 						<v-btn text
 							small
 							@click.stop="module.enabled = !module.enabled; $forceUpdate()"

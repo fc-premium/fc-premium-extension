@@ -43,7 +43,6 @@
 								color="primary">mdi-{{module.enabled ? 'pause' : 'play' }}</v-icon>
 							<span>{{module.enabled ? 'Disable' : 'Enable' }}</span>
 						</v-btn>
-
 					</div>
 				</v-card-subtitle>
 			</v-card>
@@ -63,45 +62,12 @@
 			</v-col>
 		</v-row>
 
-		<v-row v-for="(option, i) in module_settings"
+		<v-row v-for="([key, option], i) in module_settings"
 			:key="i">
 			<v-col class="headline no-selection"
 				cols="8">
-				<StringInput v-if="option.type == 'string'"
-					:option="option" />
-
-				<PasswordInput v-else-if="option.type == 'password'"
-					:option="option" />
-
-				<EmailInput v-else-if="option.type == 'email'"
-					:option="option" />
-
-				<ColorInput v-else-if="option.type == 'color'"
-					:option="option" />
-
-				<SelectInput v-else-if="option.type == 'select'"
-					:option="option" />
-
-				<div v-else-if="option.type == 'number'">
-
-					<v-input :hint="option.description"
-						:label="option.title"
-						:hide-details="option.description == undefined"
-						persistent-hint>
-					</v-input>
-					<v-text-field type="number"
-						dense
-						:value="option.value"></v-text-field>
-				</div>
-
-				<div v-else-if="option.type == 'boolean'">
-					<v-checkbox :value="option.value"
-						:hint="option.description"
-						persistent-hint
-						:label="option.title"></v-checkbox>
-				</div>
-
-				<!-- {{option}} -->
+				<AutoInput :option="option"
+					@change="set_option(key, option)" />
 			</v-col>
 		</v-row>
 
@@ -120,19 +86,12 @@ import {
 	Core
 } from 'fc-premium-core'
 
-import StringInput from '../templates/inputs/string-input.vue';
-import PasswordInput from '../templates/inputs/password-input.vue';
-import EmailInput from '../templates/inputs/email-input.vue';
-import ColorInput from '../templates/inputs/color-input.vue';
-import SelectInput from '../templates/inputs/select-input.vue';
+import AutoInput from '../templates/inputs/auto-input.vue';
+
 
 @Component({
 	components: {
-		StringInput,
-		PasswordInput,
-		EmailInput,
-		ColorInput,
-		SelectInput,
+		AutoInput
 	}
 })
 export default class ModuleDisplay extends Vue {
@@ -145,12 +104,15 @@ export default class ModuleDisplay extends Vue {
 		}
 	}
 
+	set_option(key: any, option: any) {
+		this.module.config.set(key, option.value);
+	}
+
 	get module_settings() {
 		const module = this.module;
 
 		return module.config.keys().map(key => {
-			console.log(module.config.getMeta(key))
-			return module.config.getMeta(key)
+			return [key, module.config.getMeta(key)]
 		});
 	}
 
@@ -166,35 +128,20 @@ export default class ModuleDisplay extends Vue {
 	uninstall(module: Core.Module) {
 		Core.modules.uninstall(module.name);
 
-		// this.$router.push({
-		// 	path: '/'
-		// });
+		this.$router.push({
+			path: '/modules'
+		});
 
 		this.$forceUpdate();
 	}
 
-
 	created() {
-
-		console.log(this)
-
-		// this.$destroy();
-		// const module: Module = this.$store.state.modules.find((module: Module) =>
-		// 	module.name == this.$route.params.moduleName
-		// );
 		if (module === undefined) {
-
 			this.$router.push({
 				path: '/'
 			});
-
-
 		}
 	}
-
-	// hide() {
-	// 	this.$destroy();
-	// }
 }
 </script>
 

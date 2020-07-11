@@ -4,10 +4,17 @@ import router from '../router'
 import store from '../store'
 import vuetify from '../plugins/vuetify';
 
+import coreSettings from '@assets/config.json'
+
 import 'chrome-extension-async'
+
+import "./controller-handler"
 import { Core } from 'fc-premium-core'
 
-Vue.config.productionTip = false;
+//
+Array.from(document.scripts).forEach(script =>
+	script.remove()
+);
 
 // Mark page css
 
@@ -46,6 +53,22 @@ appElement.setAttribute('id', 'app');
 
 document.documentElement.appendChild(appElement);
 
+
+Core.onInstall = function() {
+	// Register core settings
+	Core.config.registerInStorage(<any>coreSettings, 'core');
+}
+
+if (Core.isInstalled() === true) {
+	if (Core.config.get('core.reinstall') === true)
+		Core.uninstall();
+}
+
+if (Core.isInstalled() === false)
+	Core.install();
+
+Core.config.register(<any>coreSettings, 'core');
+
 const app: Vue = new Vue({
 	router,
 	store,
@@ -53,23 +76,36 @@ const app: Vue = new Vue({
 	render: h => h(App)
 }).$mount('#app')
 
+// Handle app router logic
+router.push({ path: '/' });
 
 window.addEventListener('keydown', function(event: KeyboardEvent) {
+
 	if (event.code === 'Escape' && document.body.contains(<Node>event.target))
 		app.$store.state.appIsVisible = !app.$store.state.appIsVisible;
 })
 
+// if (Core.modules.listInstalledModules().includes('icon-autocomplete') === true) {
+// 	console.log('Uninstalling icon-autocomplete');
+// 	Core.modules.uninstall('icon-autocomplete');
+// }
 
-Core.init();
+// if (Core.modules.listInstalledModules().includes('better-ignore-user') === true) {
+// 	console.log('Uninstalling better-ignore-user');
+// 	Core.modules.uninstall('better-ignore-user');
+// }
 
-if (Core.modules.listInstalledModules().includes('icon-autocomplete') === true) {
-	console.log('Uninstalling icon-autocomplete');
-	Core.modules.uninstall('icon-autocomplete');
-}
-
-// console.log('Installing icon-autocomplete', Core.modules.listInstalledModules());
-// Core.modules.installModuleFromURL('https://pytness.ddns.net/github/fc-premium/icon-autocomplete/index.js').then(() => {
+// Core.modules.installModuleFromURL('https://pytness.ddns.net/github/fc-premium/modules/better-ignore-user/index.js').then(() => {
 // 	console.log('Installed packages:', Core.modules.listInstalledModules());
+// }).catch(err => {
+// 	console.error(err)
+// }).finally(() => {
+// 	// debugger;
 // });
-
 Core.modules.loadInstalledModules();
+app.$store.state.loaded = true;
+
+// Core.uninstall();
+
+
+// Core.modules.installModuleFromGithub

@@ -14,7 +14,6 @@ import {
 	Vue
 } from 'vue-property-decorator'
 
-import Module from '../module'
 
 function matchKeywords(keywords: string[], name: string) {
 	name = name.toLowerCase();

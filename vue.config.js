@@ -1,26 +1,20 @@
+const path = require('path');
 const prefixer = require('postcss-prefix-selector');
 
 module.exports = {
-	"transpileDependencies": [
+	transpileDependencies: [
 		"vuetify"
 	],
 
+	configureWebpack: {
+		resolve: {
+			alias: {
+				'@assets': path.resolve(__dirname, 'src/assets')
+			}
+		},
+	},
+
 	pages: {},
-
-
-	// css: {
-	// 	loaderOptions: {
-	// 		css: {
-	// 			// data: '@import "https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900";'
-	// 		}
-	// 	}
-	// },
-
-	// configureWebpack: {
-	// 	plugins: [
-	// 		new MyAwesomeWebpackPlugin()
-	// 	]
-	// },
 
 	pluginOptions: {
 		browserExtension: {
@@ -41,14 +35,7 @@ module.exports = {
 	},
 
 	css: {
-		requireModuleExtension: true,
 		loaderOptions: {
-			css: {
-				modules: {
-					modules: true,
-					localIdentName: '[name]-[hash]'
-				}
-			},
 			postcss: {
 				plugins: [prefixer({
 					prefix: '#app',
@@ -62,6 +49,5 @@ module.exports = {
 				})]
 			}
 		},
-		modules: true
 	}
 }

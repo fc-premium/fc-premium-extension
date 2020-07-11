@@ -42,8 +42,6 @@ export default class App extends Vue {
 			this.lastBodyScrollPosition[0] = document.documentElement.scrollLeft;
 			this.lastBodyScrollPosition[1] = document.documentElement.scrollTop;
 
-			console.log('Saved', this.lastBodyScrollPosition)
-
 			document.body.style.display = 'none';
 			( < HTMLElement > this.$el).style.display = 'block';
 
@@ -56,7 +54,7 @@ export default class App extends Vue {
 			setTimeout(() => {
 				document.documentElement.scrollLeft = this.lastBodyScrollPosition[0];
 				document.documentElement.scrollTop = this.lastBodyScrollPosition[1];
-			})
+			}, 1)
 		}
 	}
 
@@ -111,14 +109,14 @@ html {
 	background: transparent;
 }
 
-	{
+/* {
 	position: fixed;
 	display: flex;
 	top: 0;
 	bottom: 0;
 	left: 0;
 	right: 0;
-}
+} */
 
 .v-card {
 	box-sizing: border-box;

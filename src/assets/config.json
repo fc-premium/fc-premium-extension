@@ -1,52 +1,29 @@
 {
-	"username": {
-		"title": "Git Username",
-		"description": "Color used for your profile",
+	"enable-private-server": {
+		"type": "boolean",
+		"title": "Enable http repo server",
+		"description": "Allow requesting repos from a private http server",
+		"default": false
+	},
+
+	"private-server-url": {
 		"type": "string",
-		"default": "",
-		"value": ""
-	},
-
-	"email": {
-		"title": "Git Email",
-		"type": "email",
+		"title": "Private server url",
+		"description": "Url for the private server",
 		"default": ""
-	},
-
-	"password": {
-		"title": "Git Password",
-		"description": "A strong password",
-		"type": "password",
-		"default": ""
-	},
-
-	"connection-mode": {
-		"title": "Connection mode",
-		"description": "Protocol used to connect",
-		"type": "select",
-		"items": [
-			"http",
-			"https",
-			"ftp",
-			"sftp",
-			"ssh"
-		],
-		"default": 4,
-		"value": 4
-	},
-
-	"favourite-color": {
-		"title": "Favourite color",
-		"description": "Color used for your profile",
-		"type": "color",
-		"default": "#166fbf",
-		"value": "#166fbf"
 	},
 
 	"auto-update": {
+		"type": "boolean",
 		"title": "Auto Update",
 		"description": "Automaticaly update the modules",
+		"default": false
+	},
+
+	"reinstall": {
 		"type": "boolean",
+		"title": "Reinstall",
+		"description": "Reinstalls itself in the next page refresh (erasing all saved config)",
 		"default": false
 	}
 }
