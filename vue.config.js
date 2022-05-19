@@ -37,16 +37,16 @@ module.exports = {
 	css: {
 		loaderOptions: {
 			postcss: {
-				plugins: [prefixer({
-					prefix: '#app',
+				// plugins: [prefixer({
+				// 	prefix: '#app',
 
-					// Optional transform callback for case-by-case overrides
-					transform: (prefix, selector, prefixedSelector) => {
+				// 	// Optional transform callback for case-by-case overrides
+				// 	transform: (prefix, selector, prefixedSelector) => {
 
-						return selector == 'html' ?
-							'html' : `${prefix} ${selector}`;
-					}
-				})]
+				// 		return selector == 'html' ?
+				// 			'html' : `${prefix} ${selector}`;
+				// 	}
+				// })]
 			}
 		},
 	}
