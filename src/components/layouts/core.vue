@@ -38,13 +38,13 @@ import AutoInput from '../templates/inputs/auto-input.vue';
 })
 export default class CoreComponent extends Vue {
 	get core_settings() {
-		return Core.config.keys('core.').map((key: string) => {
-			return [key, Core.config.getMeta(key)]
+		return Core.ConfigHandler.keys('core.').map((key: string) => {
+			return [key, Core.ConfigHandler.getMeta(key)]
 		});
 	}
 
 	set_option(key: any, option: any) {
-		Core.config.set(key, option.value);
+		Core.ConfigHandler.set(key, option.value);
 	}
 }
 </script>

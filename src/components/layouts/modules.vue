@@ -105,8 +105,8 @@ export default class ModuleList extends Vue {
 		}
 	}
 
-	get modules(): Map < string, Core.Module > {
-		return Core.modules.getInstalledModules();
+	get modules() {
+		return Core.ModuleHandler.getInstalledModules();
 	}
 
 	get selectedSetting() {
@@ -120,13 +120,13 @@ export default class ModuleList extends Vue {
 	}
 
 	uninstall(module: Core.Module) {
-		Core.modules.uninstall(module.name);
+		Core.ModuleHandler.uninstall(module.name);
 		this.$forceUpdate();
 	}
 
 	filterModules() {
 
-		const modules: Core.Module[] = Array.from(this.modules.values());
+		const modules = Array.from(this.modules.values());
 
 		let keywords = this.filterText.toLowerCase()
 			.split(' ').filter(k => k.length > 0);
@@ -134,9 +134,9 @@ export default class ModuleList extends Vue {
 		if (keywords.length === 0)
 			return modules;
 
-		return modules.filter((module: Core.Module) =>
+		return modules.filter(module =>
 			keywords.every(keyword => module.name.includes(keyword))
-		).sort((module_a: Core.Module, module_b: Core.Module) =>
+		).sort((module_a, module_b) =>
 			module_a.name.localeCompare(module_b.name)
 		);
 	}

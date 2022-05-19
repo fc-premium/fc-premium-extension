@@ -100,7 +100,7 @@ export default class ModuleDisplay extends Vue {
 
 	data() {
 		return {
-			module: Core.modules.get(this.$route.params.moduleName)
+			module: Core.ModuleHandler.get(this.$route.params.moduleName)
 		}
 	}
 
@@ -126,7 +126,7 @@ export default class ModuleDisplay extends Vue {
 	}
 
 	uninstall(module: Core.Module) {
-		Core.modules.uninstall(module.name);
+		Core.ModuleHandler.uninstall(module.name);
 
 		this.$router.push({
 			path: '/modules'
