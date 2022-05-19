@@ -2,9 +2,9 @@ const path = require('path');
 const prefixer = require('postcss-prefix-selector');
 
 module.exports = {
-	transpileDependencies: [
-		"vuetify"
-	],
+	chainWebpack: (config) => {
+		config.module.rule('js').use('babel-loader');
+	},
 
 	configureWebpack: {
 		resolve: {
