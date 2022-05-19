@@ -54,20 +54,20 @@ appElement.setAttribute('id', 'app');
 document.documentElement.appendChild(appElement);
 
 
-Core.onInstall = function() {
+Core.addEventListener('install', function() {
 	// Register core settings
-	Core.config.registerInStorage(<any>coreSettings, 'core');
-}
+	Core.ConfigHandler.registerInStorage(<any>coreSettings, 'core');
+});
 
 if (Core.isInstalled() === true) {
-	if (Core.config.get('core.reinstall') === true)
+	if (Core.ConfigHandler.get('core.reinstall') === true)
 		Core.uninstall();
 }
 
 if (Core.isInstalled() === false)
 	Core.install();
 
-Core.config.register(<any>coreSettings, 'core');
+Core.ConfigHandler.register(<any>coreSettings, 'core');
 
 const app: Vue = new Vue({
 	router,
@@ -85,24 +85,24 @@ window.addEventListener('keydown', function(event: KeyboardEvent) {
 		app.$store.state.appIsVisible = !app.$store.state.appIsVisible;
 })
 
-// if (Core.modules.listInstalledModules().includes('icon-autocomplete') === true) {
+// if (Core.ModuleHandler.listInstalledModules().includes('icon-autocomplete') === true) {
 // 	console.log('Uninstalling icon-autocomplete');
-// 	Core.modules.uninstall('icon-autocomplete');
+// 	Core.ModuleHandler.uninstall('icon-autocomplete');
 // }
 
-// if (Core.modules.listInstalledModules().includes('better-ignore-user') === true) {
+// if (Core.ModuleHandler.listInstalledModules().includes('better-ignore-user') === true) {
 // 	console.log('Uninstalling better-ignore-user');
-// 	Core.modules.uninstall('better-ignore-user');
+// 	Core.ModuleHandler.uninstall('better-ignore-user');
 // }
 
-// Core.modules.installModuleFromURL('https://pytness.ddns.net/github/fc-premium/modules/better-ignore-user/index.js').then(() => {
-// 	console.log('Installed packages:', Core.modules.listInstalledModules());
+// Core.ModuleHandler.installModuleFromURL('https://pytness.ddns.net/github/fc-premium/modules/better-ignore-user/index.js').then(() => {
+// 	console.log('Installed packages:', Core.ModuleHandler.listInstalledModules());
 // }).catch(err => {
 // 	console.error(err)
 // }).finally(() => {
 // 	// debugger;
 // });
-Core.modules.loadInstalledModules();
+Core.ModuleHandler.loadInstalledModules();
 app.$store.state.loaded = true;
 
 // Core.uninstall();

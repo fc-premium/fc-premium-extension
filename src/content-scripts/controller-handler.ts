@@ -3,7 +3,7 @@ import { Core } from 'fc-premium-core'
 import StorageEntries = Core.Definitions.StorageEntries;
 
 
-Core.controller.setControllerMethods({
+Core.Controller.setControllerMethods({
 	getter: (keys: string | string[]): any => {
 		return JSON.parse(<string>localStorage.getItem(<string>keys));
 	},

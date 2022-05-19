@@ -115,7 +115,7 @@ const octokit = new Octokit();
 @Component({})
 export default class Install extends Vue {
 
-	private readonly privateServerIsEnabled: boolean = Core.config.get('core.enable-private-server');
+	private readonly privateServerIsEnabled: boolean = Core.ConfigHandler.get('core.enable-private-server');
 
 	private filterText!: string;
 	private requestedRepos!: any[];
@@ -153,7 +153,7 @@ export default class Install extends Vue {
 		if (this.topicTab !== 2)
 			return this.requestReposFromGithub();
 
-		const url = Core.config.get('core.private-server-url');
+		const url = Core.ConfigHandler.get('core.private-server-url');
 
 		const response = await fetch(url + '/list.php').then(r => r.text());
 
@@ -303,7 +303,7 @@ export default class Install extends Vue {
 		repo.isInstalling = true;
 		this.$forceUpdate()
 
-		Core.modules.installModuleFromGithub(repo, true)
+		Core.ModuleHandler.installModuleFromGithub(repo, true)
 			.catch(err => {
 				this.currentError = err;
 				console.error(err, repo)
@@ -315,22 +315,22 @@ export default class Install extends Vue {
 	}
 
 	uninstall(repo_name: any) {
-		Core.modules.uninstall(repo_name);
+		Core.ModuleHandler.uninstall(repo_name);
 		this.$forceUpdate();
 	}
 
 	isInstalled(repo_name: any) {
-		// console.log(Core.modules.listInstalledModules(), repo.name, Core.modules.listInstalledModules().includes(repo.name))
-		return Core.modules.listInstalledModules().includes(repo_name)
+		// console.log(Core.ModuleHandler.getInstalledModules(), repo.name, Core.ModuleHandler.getInstalledModules().includes(repo.name))
+		return Core.ModuleHandler.getInstalledModules().has(repo_name);
 	}
 
 	toogleIsEnabled(repo_name: string) {
-		Core.modules.setModuleIsEnabled(repo_name, !this.isEnabled(repo_name));
+		Core.ModuleHandler.setModuleIsEnabled(repo_name, !this.isEnabled(repo_name));
 		this.$forceUpdate()
 	}
 
 	isEnabled(repo_name: string) {
-		return Core.modules.getModuleIsEnabled(repo_name);
+		return Core.ModuleHandler.getModuleIsEnabled(repo_name);
 	}
 
 	created() {
