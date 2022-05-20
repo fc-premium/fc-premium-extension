@@ -26,6 +26,15 @@
 
 	<v-spacer />
 
+	<v-file-input
+		v-if="fileLoadingIsEnabled"
+		v-model="local_file"
+		label="File input"
+		filled
+		@change="on_file_change"
+	></v-file-input>
+
+
 	<v-alert v-if="currentError !== null"
 		:value="currentError !== null"
 		@input="currentError = null"
@@ -116,6 +125,7 @@ const octokit = new Octokit();
 export default class Install extends Vue {
 
 	private readonly privateServerIsEnabled: boolean = Core.ConfigHandler.get('core.enable-private-server');
+	private readonly fileLoadingIsEnabled: boolean = Core.ConfigHandler.get('core.enable-file-loading');
 
 	private filterText!: string;
 	private requestedRepos!: any[];
@@ -123,6 +133,7 @@ export default class Install extends Vue {
 	private abortController!: AbortController;
 	private currentError!: Error;
 	private topicTab!: number;
+	private local_file: File | null = null;
 
 	public data() {
 		return {
@@ -209,6 +220,34 @@ export default class Install extends Vue {
 		*/
 
 		// console.log(this.requestedRepos)
+	}
+	
+	private async on_file_change(e: File) {
+
+		// read file
+		const reader = new FileReader();
+
+		reader.onload = (e: ProgressEvent < FileReader > ) => {
+			const data = e.target!.result;
+
+			if (data === null)
+				return;
+
+			const blob = new Blob([data], {
+				type: 'application/javascript'
+			});
+
+			const url = URL.createObjectURL(blob);
+
+			try {
+				debugger;
+				Core.ModuleHandler.installModuleFromURL(url, true);
+			} finally {
+				URL.revokeObjectURL(url);
+			}
+		}
+
+		reader.readAsText(e);
 	}
 
 	private async requestReposFromGithub() {

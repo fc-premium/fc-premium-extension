@@ -6,6 +6,13 @@
 		"default": false
 	},
 
+	"enable-file-loading": {
+		"type": "boolean",
+		"title": "Enable file loading",
+		"description": "Allow loading files from the local filesystem",
+		"default": false
+	},
+
 	"private-server-url": {
 		"type": "string",
 		"title": "Private server url",
