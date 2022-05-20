@@ -67,6 +67,7 @@
 						<div style="float: right;">
 
 							<v-btn v-if="isInstalled(repo.name)"
+								:disabled="!module_has_settings(repo.name)"
 								text
 								small
 								class="no-text-transform caption .font-weight-light">
@@ -361,6 +362,10 @@ export default class Install extends Vue {
 	isInstalled(repo_name: any) {
 		// console.log(Core.ModuleHandler.getInstalledModules(), repo.name, Core.ModuleHandler.getInstalledModules().includes(repo.name))
 		return Core.ModuleHandler.getInstalledModules().has(repo_name);
+	}
+
+	module_has_settings(module_name: string) {
+		return Core.ConfigHandler.keys(`${module_name}.`).length > 0;
 	}
 
 	toogleIsEnabled(repo_name: string) {

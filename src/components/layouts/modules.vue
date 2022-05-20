@@ -50,7 +50,7 @@
 
 						<v-btn text
 							small
-							:disabled="module.config.keys().length === 0"
+							:disabled="!module_has_settings(module.name)"
 							class="no-text-transform caption .font-weight-light">
 							<v-icon left
 								color="primary">mdi-settings</v-icon>
@@ -106,7 +106,11 @@ export default class ModuleList extends Vue {
 	}
 
 	get modules() {
-		return Core.ModuleHandler.getInstalledModules();
+		return Core.ModuleHandler.getLoadedModules();
+	}
+
+	module_has_settings(module_name: string) {
+		return Core.ConfigHandler.keys(`${module_name}.`).length > 0;
 	}
 
 	get selectedSetting() {
