@@ -2,30 +2,30 @@
 <component v-if="option !== undefined"
 	:is="get_component(option.type)"
 	:option="option"
-	@change="$listeners.change" />
+	@change="on_change" />
 </template>
 
 <script lang="ts">
 import {
-	Component,
-	Prop,
-	Vue
-} from 'vue-property-decorator'
+Component,
+Prop,
+Vue
+} from 'vue-property-decorator';
 
-import StringInput from './string-input.vue';
+import BooleanInput from './boolean-input.vue';
+import ColorInput from './color-input.vue';
+import EmailInput from './email-input.vue';
 import NumberInput from './number-input.vue';
 import PasswordInput from './password-input.vue';
-import EmailInput from './email-input.vue';
-import ColorInput from './color-input.vue';
 import SelectInput from './select-input.vue';
-import BooleanInput from './boolean-input.vue';
+import StringInput from './string-input.vue';
 
 @Component({
 	props: ['option'],
 
 })
 export default class AutoInput extends Vue {
-	@Prop() private option!: any;
+	@Prop() public option!: any;
 
 	get_component(type: string) {
 		switch (type) {
@@ -53,6 +53,10 @@ export default class AutoInput extends Vue {
 			default:
 				return null
 		}
+	}
+
+	public get on_change()  {
+		return this.$listeners.change as (payload: Event) => void;
 	}
 }
 </script>

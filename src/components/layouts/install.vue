@@ -130,16 +130,17 @@ const octokit = new Octokit();
 @Component({})
 export default class Install extends Vue {
 
-	private readonly privateServerIsEnabled: boolean = Core.ConfigHandler.get('core.enable-private-server');
-	private readonly fileLoadingIsEnabled: boolean = Core.ConfigHandler.get('core.enable-file-loading');
+	public readonly privateServerIsEnabled: boolean = Core.ConfigHandler.get('core.enable-private-server');
+	public readonly fileLoadingIsEnabled: boolean = Core.ConfigHandler.get('core.enable-file-loading');
 
-	private filterText!: string;
-	private requestedRepos!: any[];
+	public filterText!: string;
+	public requestedRepos!: any[];
+	public currentError!: Error | null;
+	public topicTab!: number;
+	public local_file: File | null = null;
+
 	private currentPromise!: Promise < any > | null;
 	private abortController!: AbortController;
-	private currentError!: Error;
-	private topicTab!: number;
-	private local_file: File | null = null;
 
 	public data() {
 		return {
@@ -162,7 +163,7 @@ export default class Install extends Vue {
 		}
 	}
 
-	private get isLoading(): boolean {
+	public get isLoading(): boolean {
 		return this.currentPromise !== null;
 	}
 
@@ -228,7 +229,7 @@ export default class Install extends Vue {
 		// console.log(this.requestedRepos)
 	}
 
-	private async on_file_change(e: File) {
+	public async on_file_change(e: File) {
 
 		// read file
 		const reader = new FileReader();

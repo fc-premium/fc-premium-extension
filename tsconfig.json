@@ -15,12 +15,10 @@
                         "firefox-webext-browser",
                         "vuetify"
                 ],
-
                 "typeRoots": [
                         "./node_modules/@types",
                         "./node_modules/vuetify/types"
                 ],
-		
                 "paths": {
                         "@*": [
                                 "src/*"
@@ -31,7 +29,8 @@
                         "dom",
                         "dom.iterable",
                         "scripthost"
-                ]
+                ],
+                "jsx": "preserve"
         },
         "include": [
                 "src/**/*.ts",
