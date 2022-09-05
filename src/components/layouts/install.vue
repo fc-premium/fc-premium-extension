@@ -76,6 +76,16 @@
 								<span>Settings</span>
 							</v-btn>
 
+							<v-btn v-if="repo.has_issues"
+								text
+								small
+								class = "no-text-transform caption .font-weight-light"
+								@click="openIssues(repo)">
+								<v-icon left
+									color="primary">mdi-bug-outline</v-icon>
+								<span>Issues</span>
+							</v-btn>
+
 							<v-btn text
 								small
 								:loading="repo.isInstalling"
@@ -107,17 +117,12 @@
 
 <script lang="ts">
 import {
-	Component,
-	Prop,
-	Vue
-} from 'vue-property-decorator'
+Component, Vue
+} from 'vue-property-decorator';
 
 import {
-	Core
-} from 'fc-premium-core'
-import {
-	NO_CACHE_HEADERS
-} from 'fc-premium-core/src/definitions'
+Core
+} from 'fc-premium-core';
 
 const Octokit = require("@octokit/rest");
 const octokit = new Octokit();
@@ -222,7 +227,7 @@ export default class Install extends Vue {
 
 		// console.log(this.requestedRepos)
 	}
-	
+
 	private async on_file_change(e: File) {
 
 		// read file
@@ -318,6 +323,10 @@ export default class Install extends Vue {
 		this.$router.push({
 			path: `/module/${name}`,
 		});
+	}
+
+	public openIssues(repo: any) {
+		window.open(repo.html_url + '/issues');
 	}
 
 	filterRepos(__repos: any) {
