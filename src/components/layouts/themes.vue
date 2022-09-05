@@ -24,16 +24,14 @@
 
 <script lang="ts">
 import {
-	Component,
-	Prop,
-	Vue
-} from 'vue-property-decorator'
+Component, Vue
+} from 'vue-property-decorator';
 
-import StringInput from '../templates/inputs/string-input.vue';
-import PasswordInput from '../templates/inputs/password-input.vue';
-import EmailInput from '../templates/inputs/email-input.vue';
 import ColorInput from '../templates/inputs/color-input.vue';
+import EmailInput from '../templates/inputs/email-input.vue';
+import PasswordInput from '../templates/inputs/password-input.vue';
 import SelectInput from '../templates/inputs/select-input.vue';
+import StringInput from '../templates/inputs/string-input.vue';
 
 @Component({
 	components: {
@@ -57,7 +55,7 @@ export default class Themes extends Vue {
 		}
 	}
 
-	get currentTheme(): any {
+	get currentTheme(): Record<string, any> {
 		return this.$vuetify.theme.themes[this.$vuetify.theme.dark ? 'dark' : 'light'];
 	}
 
@@ -65,7 +63,7 @@ export default class Themes extends Vue {
 		return this.defaultThemes[this.$vuetify.theme.dark ? 'dark' : 'light'];
 	}
 
-	private getOptionFromColor(i: string): any {
+	public getOptionFromColor(i: string): any {
 		const self = this;
 
 		return {

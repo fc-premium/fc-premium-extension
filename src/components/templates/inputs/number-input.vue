@@ -15,22 +15,20 @@
 		@input="option.value=typeParser(option.value);"
 		v-model="option.value"></v-text-field>
 </div>
-
-</div>
 </template>
 
 <script lang="ts">
 import {
-	Component,
-	Prop,
-	Vue
-} from 'vue-property-decorator'
+Component,
+Prop,
+Vue
+} from 'vue-property-decorator';
 
 @Component({
 	props: ['option']
 })
 export default class NumberInput extends Vue {
-	@Prop() private option!: any;
+	@Prop() public option!: any;
 
 	typeParser(value: string | number): number {
 		let number = parseInt( < string > value);

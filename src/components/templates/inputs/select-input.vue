@@ -15,23 +15,19 @@
 		item-value="index"
 		dense></v-select>
 </div>
-
-</div>
 </template>
 
 <script lang="ts">
 import {
-	Component,
-	Prop,
-	Watch,
-	Vue
-} from 'vue-property-decorator'
+Component,
+Prop, Vue
+} from 'vue-property-decorator';
 
 @Component({
 	props: ['option']
 })
 export default class SelectInput extends Vue {
-	@Prop() private option!: any;
+	@Prop() public option!: any;
 	private isVisible: boolean = false;
 
 	get items() {

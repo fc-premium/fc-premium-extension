@@ -13,21 +13,20 @@
 		v-model="option.value"></v-text-field>
 </div>
 
-</div>
 </template>
 
 <script lang="ts">
 import {
-	Component,
-	Prop,
-	Vue
-} from 'vue-property-decorator'
+Component,
+Prop,
+Vue
+} from 'vue-property-decorator';
 
 @Component({
 	props: ['option']
 })
 export default class EmailInput extends Vue {
-	@Prop() private option!: any;
+	@Prop() public option!: any;
 
 	reset() {
 		this.option.value = this.option.default;

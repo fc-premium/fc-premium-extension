@@ -85,19 +85,17 @@
 
 <script lang="ts">
 import {
-	Component,
-	Prop,
-	Vue
-} from 'vue-property-decorator'
+Component, Vue
+} from 'vue-property-decorator';
 
 import {
-	Core
-} from 'fc-premium-core'
+Core
+} from 'fc-premium-core';
 
 @Component({})
 export default class ModuleList extends Vue {
 
-	private filterText!: string;
+	public filterText!: string;
 
 	public data() {
 		return {

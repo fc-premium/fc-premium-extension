@@ -51,7 +51,7 @@
 
 
 	</v-row>
-	<div v-if="module.config.keys() !== 0">
+	<div v-if="module.config.keys().length !== 0">
 		<v-row>
 			<v-col>
 				<div class="display-2 my-5 font-weight-thin no-selection">
@@ -77,14 +77,12 @@
 
 <script lang="ts">
 import {
-	Component,
-	Prop,
-	Vue
-} from 'vue-property-decorator'
+Component, Vue
+} from 'vue-property-decorator';
 
 import {
-	Core
-} from 'fc-premium-core'
+Core
+} from 'fc-premium-core';
 
 import AutoInput from '../templates/inputs/auto-input.vue';
 
@@ -96,7 +94,7 @@ import AutoInput from '../templates/inputs/auto-input.vue';
 })
 export default class ModuleDisplay extends Vue {
 
-	private module!: Core.Module;
+	public module!: Core.Module;
 
 	data() {
 		return {

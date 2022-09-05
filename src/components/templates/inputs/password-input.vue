@@ -17,25 +17,23 @@
 		counter
 		v-model="option.value"></v-text-field>
 </div>
-
-</div>
 </template>
 
 <script lang="ts">
 import {
-	Component,
-	Prop,
-	Vue
-} from 'vue-property-decorator'
+Component,
+Prop,
+Vue
+} from 'vue-property-decorator';
 
 @Component({
 	props: ['option']
 })
 export default class PasswordInput extends Vue {
-	@Prop() private option!: any;
+	@Prop() public option!: any;
 
 	private isFocused: boolean = false;
-	private passwordVisible: boolean = false;
+	public passwordVisible: boolean = false;
 	reset() {
 		this.option.value = this.option.default;
 		this.$forceUpdate()

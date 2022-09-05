@@ -24,24 +24,20 @@
 		</v-color-picker>
 	</v-dialog>
 </div>
-
-</div>
 </template>
 
 <script lang="ts">
 import {
-	Component,
-	Prop,
-	Watch,
-	Vue
-} from 'vue-property-decorator'
+Component,
+Prop, Vue
+} from 'vue-property-decorator';
 
 @Component({
 	props: ['option']
 })
 export default class ColorInput extends Vue {
-	@Prop() private option!: any;
-	private isVisible: boolean = false;
+	@Prop() public option!: any;
+	public isVisible: boolean = false;
 
 	get colorValue() {
 		return this.option.value;
